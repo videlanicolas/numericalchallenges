@@ -1,0 +1,2 @@
+# numericalchallenges
+Assorted computational challenges.
