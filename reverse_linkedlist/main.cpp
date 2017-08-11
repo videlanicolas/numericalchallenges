@@ -20,17 +20,41 @@ Node::Node(int v)
 
 class List
 {
-public:
+private:
+	Node * private_reverse(Node *);
+	Node * private_destroy(Node *);
+	unsigned private_len(Node *);
 	Node * head;
+public:	
 	List(void);
-	void append( int );
+	~List(void);
+	void append(int);
 	void print(void);
 	void reverse(void);
+	unsigned len(void);
 };
 
 List::List()
 {
 	head = NULL;
+}
+
+List::~List()
+{
+	if (!head)
+	{
+		Node * p = head;
+
+	}
+}
+
+Node * List::private_destroy(Node * head)
+{
+	if (head->next)
+	{
+		private_destroy(head->next);
+		delete head->next;
+	}
 }
 
 void List::append(int v)
@@ -57,21 +81,37 @@ void List::print(void)
 	cout << endl;
 }
 
-/*
-void List::reverse(void)
+Node * List::private_reverse(Node * h)
 {
-	if (head->next != NULL)
+	if (h->next)
 	{
-		head = head->next;
-		Node * last = reverse();
-		head->next->next = head;
-		head->next = NULL;
+		Node * last = private_reverse(h->next);
+		h->next->next = h;
+		h->next = NULL;
 		return last;
 	}
 	else
-		return head;
+		return h;
 }
-*/
+
+unsigned List::private_len(Node * h)
+{
+	if (h == NULL)
+		return 0;
+	else
+		return 1 + private_len(h->next);
+}
+
+unsigned List::len(void)
+{
+	return private_len(head);
+}
+
+void List::reverse(void)
+{
+	if (head)
+		head = private_reverse(head);
+}
 
 unsigned count_nodes(Node * head)
 {
@@ -84,30 +124,16 @@ unsigned count_nodes(Node * head)
 int main(int argc, char *argv[])
 {
 	cout << "Creating linked list ..." << endl;
-	//Node first (atoi(argv[1]));
-	//Node * head = &first;
-	//Node * p = head;
-	/*
-	
-	{
-		p->next = new Node(atoi(argv[i]));
-		p = p->next;
-	}
-	*/
 	List list;
 	for (int i = 1; i < argc; i++)
 	{
 		list.append(atoi(argv[i]));
 	}
 	list.print();
-	/*
-	cout << "There are " << count_nodes(head) << " nodes." << endl;
-	cout << "Printing nodes ..." << endl;
-	print_list(head);
-	cout << "Reversing nodes ..." << endl;
-	head = reverse_nodes(head);
-	cout << "Printing nodes ..." << endl;
-	print_list(head);
-	*/
+	cout << "Len: " << list.len() << endl;
+	list.reverse();
+	cout << "Reverse: " << endl;
+	list.print();
+
 	return 0;
 }
